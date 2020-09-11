@@ -1,0 +1,7 @@
+create table book(book_id integer primary key,title varchar(20),publisher_name varchar(20),pub_year varchar(20));
+insert into book values(01,'dbms','abc','2020');
+insert into book values(02,'dc','def','2020');
+insert into book values(03,'daa','ghi','2020');
+insert into book values(04,'mes','jkl','2020');
+insert into book values(05,'daa','mno','2020');
+create table book_copies(book_id integer,branch_id integer,no_of_copies integer,primary key(book_id,branch_id));                                                                                                            
