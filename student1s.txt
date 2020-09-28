@@ -1,0 +1,34 @@
+create table student(ssn integer primary key,name varchar(10),major varchar(10),bdate date);
+create table course(course_no integer primary key,cname varchar(10),dept varchar(10));
+create table text_book(book_isbn integer primary key,book_title varchar(20),publisher varchar(10),author varchar(10));
+create table book_adoption(course_no integer,quarter integer,book_isbn integer,primary key(course_no,quarter),foreign key(course_no) references course(course_no),foreign key(book_isbn) references text_book(book_isbn));
+create table enroll(ssn integer,course_no integer,quarter integer,grade varchar(10),primary key(ssn,course_no,quarter),foreign key(ssn) references student(ssn),foreign key(course_no,quarter) references book_adoption(course_no,quarter));
+insert into student values(10,'ram','cs','2000-12-20');
+insert into student values(20,'raj','ec','2000-07-20');
+insert into student values(30,'raksha','is','2000-08-02');          
+insert into student values(40,'reshma','civil','2000-08-07');       
+insert into student values(50,'rani','cs','2000-11-10'); 
+insert into course values(100,'dbms','cs');
+insert into course values(200,'daa','cs');
+insert into course values(300,'m1','maths');
+insert into course values(400,'atc','is');
+insert into course values(500,'ds','is');
+insert into text_book values(123,'data_base','mcgraw','andrew');
+insert into text_book values(453,'data_structure','person','rajkumar');
+insert into text_book values(192,'python','sampub','samula');         
+insert into text_book values(823,'java','iop','padma');               
+insert into text_book values(103,'c_application','ieee','guru');   
+insert into book_adoption values(100,2,123);
+insert into book_adoption values(200,3,453);
+insert into book_adoption values (400,4,192);
+insert into book_adoption values(500,1,823);
+insert into book_adoption values(300,5,103);
+insert into enroll values(10,100,2,'a');       
+insert into enroll values(20,200,3,'b');
+insert into enroll values(30,400,4,'c');  
+insert into enroll values(40,500,1,'d');                             
+insert into enroll values(50,300,5,'e');    
+
+                                                                                  
+                                                                                  
+  
