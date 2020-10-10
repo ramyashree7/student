@@ -1,0 +1,57 @@
+**Schema (MySQL v5.7)**
+
+    create table publisher(name varchar(10) primary key,address varchar(10),phone_no long);
+    create table book(book_id integer primary key,tittle varchar(10),publisher_name varchar(10),pub_year integer,foreign key(publisher_name) references publisher(name)on delete cascade);
+    create table book_authors(book_id integer primary key,author_name varchar(10),foreign key(book_id) references book(book_id)on delete cascade);
+    create table library_branch(branch_id integer primary key,branch_name varchar(30),address varchar(10));
+    create table book_copies(book_id integer,branch_id integer,no_of_copies integer,primary key(book_id,branch_id),foreign key(book_id) references book(book_id)on delete cascade,foreign key(branch_id) references library_branch(branch_id)on delete cascade);
+    create table book_lending(book_id integer,branch_id integer,card_no integer,date_out date,due_date date,primary key(book_id,branch_id,card_no),foreign key(branch_id) references library_branch(branch_id)on delete cascade,foreign key(book_id) references book(book_id)on delete cascade);
+    insert into publisher values('Mcgraw','Banglore',9696500001);        
+    insert into publisher values('Person','Banglore',9595950000);        
+    insert into publisher values('SAM Pub','Manglore',9494940000);        
+    insert into publisher values('IOP','Mumbai',9797970000);        
+    insert into publisher values('IEEE','Delhi',9090900000);        
+    insert into book values(10,'DBMS','Mcgraw',2010); 
+    insert into book values(20,'SE','Person',2008);          
+    insert into book values(30,'FLAT','SAM Pub',2019); 
+    insert into book values(40,'BDA','IOP',2018); 
+    insert into book values(50,'MP','IEEE',2020); 
+    insert into book_authors values(10,'Andrew');      
+    insert into book_authors values(20,'Raj Kumar');      
+    insert into book_authors values(30,'Samual');          
+    insert into book_authors values(40,'Padma');      
+    insert into book_authors values(50,'Guru');      
+    insert into library_branch values(100,'Main Building','Manglore');
+    insert into library_branch values(200,'Ground Floor','Banglore');
+    insert into library_branch values(300,'1st Floor','Banglore');
+    insert into library_branch values(400,'Research Building','Udupi');
+    insert into library_branch values(500,'OPD Building','Manipal');
+    insert into book_copies values(10,100,20);
+    insert into book_copies values(30,100,30);
+    insert into book_copies values(10,200,15);
+    insert into book_copies values(20,300,15);                             
+    insert into book_copies values(40,500,7);
+    insert into book_lending values(10,100,201,'2020-06-15','2020-06-25');
+    insert into book_lending values(20,200,202,'2020-07-10','2020-07-20');
+    insert into book_lending values(30,300,203,'2020-07-25','2020-07-30');
+    insert into book_lending values(40,400,204,'2020-08-14','2020-08-26');
+    insert into book_lending values(50,500,205,'2020-09-01','2020-09-10');
+    
+
+---
+
+**Query #1**
+
+    select book.book_id,tittle,publisher_name,author_name,branch_id,no_of_copies from book,book_authors,book_copies where book.book_id=book_authors.book_id AND book.book_id= book_copies.book_id;
+
+| book_id | tittle | publisher_name | author_name | branch_id | no_of_copies |
+| ------- | ------ | -------------- | ----------- | --------- | ------------ |
+| 10      | DBMS   | Mcgraw         | Andrew      | 100       | 20           |
+| 10      | DBMS   | Mcgraw         | Andrew      | 200       | 15           |
+| 20      | SE     | Person         | Raj Kumar   | 300       | 15           |
+| 30      | FLAT   | SAM Pub        | Samual      | 100       | 30           |
+| 40      | BDA    | IOP            | Padma       | 500       | 7            |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/wxBSqDTnfJ5BjuBB3sJhRp/0)
