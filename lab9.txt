@@ -1,0 +1,110 @@
+**Schema (MySQL v5.7)**
+
+    create table SALESMAN(Salesman_id integer primary key,Name varchar(20),City varchar(20),Commission integer);
+    create table CUSTOMER(Customer_id integer primary key,Cust_name varchar(20),City varchar(20),Grade varchar(5),
+    Salesman_id integer,foreign key(Salesman_id)  references SALESMAN(Salesman_id) ON DELETE CASCADE);
+    create table ORDERS(Order_No integer primary key,Purchase_Amt integer,ord_date date,Customer_id integer,Salesman_id integer,
+    foreign key(Customer_id) references CUSTOMER(Customer_id) ON DELETE CASCADE,foreign key(Salesman_id) references
+    SALESMAN(Salesman_id) ON DELETE CASCADE);
+    insert into SALESMAN values(10,'akash','mangalore',2);
+    insert into SALESMAN values(20,'ram','bangalore',10);
+    insert into SALESMAN values(30,'raj','mangalore',5);
+    insert into SALESMAN values(40,'kiran','mysore',15);
+    insert into SALESMAN values(50,'khan','udupi',10);
+    insert into CUSTOMER values(1000,'avinash','mangalore',100,10);
+    insert into CUSTOMER values(2000,'kumar','bangalore',200,20);
+    insert into CUSTOMER values(3000,'prithi','mysore',300,40);
+    insert into CUSTOMER values(5000,'sara','mysore',300,50);
+    insert into CUSTOMER values(4000,'smitha','mangalore',400,30);
+    insert into ORDERS values(551,5000,'2020-01-04',1000,10);
+    insert into ORDERS values(552,2500,'2020-02-05',2000,20);
+    insert into ORDERS values(553,500,'2020-03-03',3000,40);
+    insert into ORDERS values(554,1500,'2020-04-02',4000,30);
+    insert into ORDERS values(555,2000,'2020-06-02',2000,10);
+    
+    
+
+---
+
+**Query #1**
+
+    select count(*) from CUSTOMER where Grade>(select avg(grade) from CUSTOMER where City='bangalore');
+
+| count(*) |
+| -------- |
+| 3        |
+
+---
+**Query #2**
+
+    select Salesman_id,name from SALESMAN where Salesman_id in(select Salesman_id from ORDERS group by Salesman_id having count(*)>1);
+
+| Salesman_id | name  |
+| ----------- | ----- |
+| 10          | akash |
+
+---
+**Query #3**
+
+    (select Salesman_id,Name from SALESMAN S where exists(select Salesman_id from CUSTOMER C where S.city=C.city and S.Salesman_id=C.Salesman_id))union (select Salesman_id,Name from SALESMAN S where not exists(select Salesman_id from CUSTOMER C where S.city=C.city and S.Salesman_id=C.Salesman_id));
+
+| Salesman_id | Name  |
+| ----------- | ----- |
+| 10          | akash |
+| 20          | ram   |
+| 30          | raj   |
+| 40          | kiran |
+| 50          | khan  |
+
+---
+**Query #4**
+
+    create view v as select Salesman_id from ORDERS group by ord_date having max(ord_date);
+
+There are no results to be displayed.
+
+---
+**Query #5**
+
+    delete from SALESMAN where Salesman_id=10;
+
+There are no results to be displayed.
+
+---
+**Query #6**
+
+    select *from SALESMAN;
+
+| Salesman_id | Name  | City      | Commission |
+| ----------- | ----- | --------- | ---------- |
+| 20          | ram   | bangalore | 10         |
+| 30          | raj   | mangalore | 5          |
+| 40          | kiran | mysore    | 15         |
+| 50          | khan  | udupi     | 10         |
+
+---
+**Query #7**
+
+    select *from CUSTOMER;
+
+| Customer_id | Cust_name | City      | Grade | Salesman_id |
+| ----------- | --------- | --------- | ----- | ----------- |
+| 2000        | kumar     | bangalore | 200   | 20          |
+| 3000        | prithi    | mysore    | 300   | 40          |
+| 4000        | smitha    | mangalore | 400   | 30          |
+| 5000        | sara      | mysore    | 300   | 50          |
+
+---
+**Query #8**
+
+    select *from ORDERS;
+
+| Order_No | Purchase_Amt | ord_date   | Customer_id | Salesman_id |
+| -------- | ------------ | ---------- | ----------- | ----------- |
+| 552      | 2500         | 2020-02-05 | 2000        | 20          |
+| 553      | 500          | 2020-03-03 | 3000        | 40          |
+| 554      | 1500         | 2020-04-02 | 4000        | 30          |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/)
