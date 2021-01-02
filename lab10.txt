@@ -1,11 +1,8 @@
-
-
-
-     create table student(usn varchar(20) primary key,sname varchar(20),address varchar(20),phone long,gender varchar(10));
-        create table semsec(ssid integer primary key,sem integer,sec varchar(5));
-        create table class(usn varchar(20) primary key,ssid integer,foreign key(usn) references student(usn),foreign key(ssid) references semsec(ssid));
-        create table course(subcode varchar(20) primary key,title varchar(20),sem integer,credits integer);
-        create table iamarks(usn varchar(20),subcode varchar(20),ssid integer,test1 integer,test2 integer,test3 integer,finalia integer,primary key(usn,subcode,ssid),foreign key(usn) references student(usn),foreign key(subcode) references course(subcode),foreign key(ssid) references semsec(ssid));
+ create table student(usn varchar(20) primary key,sname varchar(20),address varchar(20),phone long,gender varchar(10));
+ create table semsec(ssid integer primary key,sem integer,sec varchar(5))
+ create table class(usn varchar(20) primary key,ssid integer,foreign key(usn) references student(usn),foreign key(ssid) references semsec(ssid));
+ create table course(subcode varchar(20) primary key,title varchar(20),sem integer,credits integer);
+ create table iamarks(usn varchar(20),subcode varchar(20),ssid integer,test1 integer,test2 integer,test3 integer,finalia integer,primary key(usn,subcode,ssid),foreign key(usn)     references student(usn),foreign key(subcode) references course(subcode),foreign key(ssid) references semsec(ssid));
         insert into student values('cs101','sharan','manglore',9696500000,'male');
         insert into student values('cs102','prithi','banglore',9496500000,'female');
         insert into student values('cs103','sahana','mysore',9696400000,'female');
@@ -66,12 +63,6 @@
 **Query #3**
 
     create view test1 as select subcode,test1 from  iamarks where usn='cs101';
-
-There are no results to be displayed.
-
----
-**Query #4**
-
     select *from test1;
 
 | subcode | test1 |
@@ -83,15 +74,9 @@ There are no results to be displayed.
 | 18cs55  | 9     |
 
 ---
-**Query #5**
+**Query #4**
 
     update iamarks set finalia=((test1+test2+test3)-least(test1,test2,test3))/2;
-
-There are no results to be displayed.
-
----
-**Query #6**
-
     select * from iamarks;
 
 | usn   | subcode | ssid | test1 | test2 | test3 | finalia |
@@ -108,7 +93,7 @@ There are no results to be displayed.
 | cs103 | 18cs55  | 111  | 19    | 16    | 10    | 18      |
 
 ---
-**Query #7**
+**Query #5**
 
     select s.usn,s.sname,finalia,
      (case
@@ -125,9 +110,6 @@ There are no results to be displayed.
 | cs103 | sahana | 15      | average     |
 | cs103 | sahana | 15      | average     |
 | cs103 | sahana | 18      | outstanding |
-
----
-**Query #8**
 
     select s.usn,s.sname,finalia, (case when finalia>=17 and finalia<=20 then 'outstanding'
      when finalia>=12 and finalia<=17 then 'average'  
