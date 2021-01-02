@@ -1,40 +1,147 @@
 
-**Schema (MySQL v5.7)**
 
-    create table student(usn varchar(20) primary key,sname varchar(20),address varchar(20),phone long,gender varchar(10));
-    create table semsec(ssid integer primary key,sem integer,sec varchar(5));
-    create table class(usn varchar(20) primary key,ssid integer,foreign key(usn) references student(usn),foreign key(ssid) references semsec(ssid));
-    create table course(subcode varchar(20) primary key,title varchar(20),sem integer,credits integer);
-    create table iamarks(usn varchar(20),subcode varchar(20),ssid integer,test1 integer,test2 integer,test3 integer,finalia integer,primary key(usn,subcode,ssid),foreign key(usn) references student(usn),foreign key(subcode) references course(subcode),foreign key(ssid) references semsec(ssid));
-    insert into student values('cs101','sharan','manglore',9696500000,'male');
-    insert into student values('cs102','prithi','banglore',9496500000,'female');
-    insert into student values('cs103','sahana','mysore',9696400000,'female');
-    insert into student values('cs104','shan','manglore',9697500000,'male');
-    insert into student values('cs105','kiran','banglore',9698500000,'male');
-    insert into semsec values(111,5,'cs1');
-    insert into semsec values(112,5,'cs2');
-    insert into semsec values(113,5,'cs1');
-    insert into semsec values(114,5,'cs1');
-    insert into semsec values(115,5,'cs2');
-    insert into class values('cs101',113);
-    insert into class values('cs102',115);
-    insert into class values('cs103',111);
-    insert into class values('cs104',112);
-    insert into class values('cs105',114);
-    insert into course values('18cs51','atc',5,3);
-    insert into course values('18cs52','dbms',5,4);
-    insert into course values('18cs53','up',5,2);
-    insert into course values('18cs54','me',5,3);
-    insert into course values('18cs55','cns',5,4);
-    insert into iamarks values('cs101','18cs51',113,50,46,47,48);
-    insert into iamarks values ('cs101','18cs52',113,40,40,47,42);
-    insert into iamarks values('cs101','18cs53',113,50,40,45,45);
-    insert into iamarks values('cs101','18cs54',113,40,46,41,42);
-    insert into iamarks values('cs101','18cs55',113,50,46,40,45);
-    insert into iamarks values('cs103','18cs51',111,45,42,44,44);
-    insert into iamarks values('cs103','18cs52',111,41,47,30,44);
-    insert into iamarks values('cs103','18cs53',111,38,42,41,45);
-    insert into iamarks values('cs103','18cs54',111,35,45,40,40);
-    insert into iamarks values('cs103','18cs55',111,39,46,40,42);
+
+     create table student(usn varchar(20) primary key,sname varchar(20),address varchar(20),phone long,gender varchar(10));
+        create table semsec(ssid integer primary key,sem integer,sec varchar(5));
+        create table class(usn varchar(20) primary key,ssid integer,foreign key(usn) references student(usn),foreign key(ssid) references semsec(ssid));
+        create table course(subcode varchar(20) primary key,title varchar(20),sem integer,credits integer);
+        create table iamarks(usn varchar(20),subcode varchar(20),ssid integer,test1 integer,test2 integer,test3 integer,finalia integer,primary key(usn,subcode,ssid),foreign key(usn) references student(usn),foreign key(subcode) references course(subcode),foreign key(ssid) references semsec(ssid));
+        insert into student values('cs101','sharan','manglore',9696500000,'male');
+        insert into student values('cs102','prithi','banglore',9496500000,'female');
+        insert into student values('cs103','sahana','mysore',9696400000,'female');
+        insert into student values('cs104','shan','manglore',9697500000,'male');
+        insert into student values('cs105','kiran','banglore',9698500000,'male');
+        insert into semsec values(111,8,'A');
+        insert into semsec values(112,4,'C');
+        insert into semsec values(113,4,'C');
+        insert into semsec values(114,5,'A');
+        insert into semsec values(115,8,'B');
+        insert into class values('cs101',113);
+        insert into class values('cs102',115);
+        insert into class values('cs103',111);
+        insert into class values('cs104',112);
+        insert into class values('cs105',114);
+        insert into course values('18cs51','atc',5,3);
+        insert into course values('18cs52','dbms',5,4);
+        insert into course values('18cs53','up',5,2);
+        insert into course values('18cs54','me',5,3);
+        insert into course values('18cs55','cns',5,4);
+        insert into iamarks values('cs101','18cs51',113,15,17,18,18);
+        insert into iamarks values ('cs101','18cs52',113,10,13,8,12);
+        insert into iamarks values('cs101','18cs53',113,10,10,15,13);
+        insert into iamarks values('cs101','18cs54',113,9,11,14,null);
+        insert into iamarks values('cs101','18cs55',113,9,13,16,15);
+        insert into iamarks values('cs103','18cs51',111,15,14,16,null);
+        insert into iamarks values('cs103','18cs52',111,20,16,12,18);
+        insert into iamarks values('cs103','18cs53',111,18,12,11,15);
+        insert into iamarks values('cs103','18cs54',111,15,15,10,15);
+        insert into iamarks values('cs103','18cs55',111,19,16,10,null);
+        
     
 
+---
+
+**Query #1**
+
+    select *from student s,semsec ss,class c where s.usn=c.usn and c.ssid=ss.ssid and sem='4' and sec='c';
+
+| usn   | sname  | address  | phone      | gender | ssid | sem | sec | usn   | ssid |
+| ----- | ------ | -------- | ---------- | ------ | ---- | --- | --- | ----- | ---- |
+| cs104 | shan   | manglore | 9697500000 | male   | 112  | 4   | C   | cs104 | 112  |
+| cs101 | sharan | manglore | 9696500000 | male   | 113  | 4   | C   | cs101 | 113  |
+
+---
+**Query #2**
+
+    select sem,sec,gender,count(*) from student s,class c,semsec ss where s.usn=c.usn and c.ssid =ss.ssid group by sem,sec,gender order by sem;
+
+| sem | sec | gender | count(*) |
+| --- | --- | ------ | -------- |
+| 4   | C   | male   | 2        |
+| 5   | A   | male   | 1        |
+| 8   | A   | female | 1        |
+| 8   | B   | female | 1        |
+
+---
+**Query #3**
+
+    create view test1 as select subcode,test1 from  iamarks where usn='cs101';
+
+There are no results to be displayed.
+
+---
+**Query #4**
+
+    select *from test1;
+
+| subcode | test1 |
+| ------- | ----- |
+| 18cs51  | 15    |
+| 18cs52  | 10    |
+| 18cs53  | 10    |
+| 18cs54  | 9     |
+| 18cs55  | 9     |
+
+---
+**Query #5**
+
+    update iamarks set finalia=((test1+test2+test3)-least(test1,test2,test3))/2;
+
+There are no results to be displayed.
+
+---
+**Query #6**
+
+    select * from iamarks;
+
+| usn   | subcode | ssid | test1 | test2 | test3 | finalia |
+| ----- | ------- | ---- | ----- | ----- | ----- | ------- |
+| cs101 | 18cs51  | 113  | 15    | 17    | 18    | 18      |
+| cs101 | 18cs52  | 113  | 10    | 13    | 8     | 12      |
+| cs101 | 18cs53  | 113  | 10    | 10    | 15    | 13      |
+| cs101 | 18cs54  | 113  | 9     | 11    | 14    | 13      |
+| cs101 | 18cs55  | 113  | 9     | 13    | 16    | 15      |
+| cs103 | 18cs51  | 111  | 15    | 14    | 16    | 16      |
+| cs103 | 18cs52  | 111  | 20    | 16    | 12    | 18      |
+| cs103 | 18cs53  | 111  | 18    | 12    | 11    | 15      |
+| cs103 | 18cs54  | 111  | 15    | 15    | 10    | 15      |
+| cs103 | 18cs55  | 111  | 19    | 16    | 10    | 18      |
+
+---
+**Query #7**
+
+    select s.usn,s.sname,finalia,
+     (case
+      when finalia>=17 and finalia<=20 then 'outstanding'
+       when finalia>=12 and finalia<=17 then 'average'  
+       when finalia<12 then 'weak'  
+      end)CAT
+      from student s,iamarks ia,class c,semsec sc where s.usn=ia.usn and s.usn=c.usn and c.ssid=sc.ssid and sem=8;
+
+| usn   | sname  | finalia | CAT         |
+| ----- | ------ | ------- | ----------- |
+| cs103 | sahana | 16      | average     |
+| cs103 | sahana | 18      | outstanding |
+| cs103 | sahana | 15      | average     |
+| cs103 | sahana | 15      | average     |
+| cs103 | sahana | 18      | outstanding |
+
+---
+**Query #8**
+
+    select s.usn,s.sname,finalia, (case when finalia>=17 and finalia<=20 then 'outstanding'
+     when finalia>=12 and finalia<=17 then 'average'  
+      when finalia<12 then 'weak'
+      end)CAT from student s,iamarks ia,class c,semsec sc where s.usn=ia.usn and s.usn=c.usn and c.ssid=sc.ssid and sem=8 and (sec='a' or sec='b' or sec='c');
+
+| usn   | sname  | finalia | CAT         |
+| ----- | ------ | ------- | ----------- |
+| cs103 | sahana | 16      | average     |
+| cs103 | sahana | 18      | outstanding |
+| cs103 | sahana | 15      | average     |
+| cs103 | sahana | 15      | average     |
+| cs103 | sahana | 18      | outstanding |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/)
